@@ -47,7 +47,9 @@ public abstract class Shape {
 	public void rotate(){
 		shapeNow=dataLs.get((++rotate)%dataLs.size()).clone();
 	}
-
+	public void render(){
+		shapeNow=dataLs.get((rotate)%dataLs.size()).clone();
+	}
 	/**
 	 * 回溯
 	 */

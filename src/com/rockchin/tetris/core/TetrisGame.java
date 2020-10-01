@@ -12,14 +12,21 @@ public class TetrisGame extends Thread{
 
 	private int state=0;
 	public static final int READY=0,PLAYING=1,OVER=2;
-	private int gameState=0;
-	public static final int GSTOP=0,GFALLING=1,GROTATE=2,GNEXT=3;
+	public int gameState=0;
+	public static final int GSTOP=0,GPLAYING=1;
 	public static final int MDOWN=0,MUP=1,MLEFT=2,MRIGHT=3;
 
-	private Shape fallingBlock=null;
-	private Shape nextBlock=null;
 	private RandomShape randomShape=new RandomShape();
+	public Shape fallingBlock=randomShape.nextShape();
+	public Shape nextBlock=randomShape.nextShape();
 	private boolean[][] map=new boolean[H][W];
+	public boolean[][] getMap(){
+		return map;
+	}
+	public TetrisGame(){
+		fallingBlock.render();
+		nextBlock.render();
+	}
 	/**
 	 * 进入下一个循环
 	 */
@@ -37,16 +44,19 @@ public class TetrisGame extends Thread{
 		}else {
 			synchronized (this) {
 				//无法下移,写进map
-				for (int i = 0; i < 4; i++) {
+				i:for (int i = 0; i < 4; i++) {
 					for (int j = 0; j < 4; j++) {
 						if (fallingBlock.getShapeNow()[i][j]) {
-							if (map[i + fallingBlock.getY()][j + fallingBlock.getX()]){
-								System.out.println("##程序出现无法解释异常##");
+							if (i+fallingBlock.getY()<0){
+								gameOver();
+								continue ;
 							}
 							map[i + fallingBlock.getY()][j + fallingBlock.getX()]=true;
 						}
 					}
 				}
+				if (gameState==GSTOP)
+					return;
 				//下一个
 				fallingBlock = nextBlock.cloneWithoutRotate();
 				int rotateTimes = (int) (Math.random() * 100 % 4 + 1);
@@ -61,7 +71,7 @@ public class TetrisGame extends Thread{
 				}
 				//获取下一个
 				nextBlock = randomShape.nextShape();
-				nextBlock.rotate();
+				nextBlock.render();
 			}
 		}
 	}
@@ -106,12 +116,15 @@ public class TetrisGame extends Thread{
 		for(int i=0;i<4;i++){
 			for(int j=0;j<4;j++){
 				if(shape.getShapeNow()[i][j]) {
-					//先检查是否与map冲突
-					if (map[i + shape.getY()][j + shape.getX()]) {
-						return true;
-					}
 					//检查是否出边界了
 					if(i+shape.getY()>=H||j+shape.getX()>=W||j+shape.getX()<0){
+						return true;
+					}
+					if(i+shape.getY()<0){
+						return false;
+					}
+					//先检查是否与map冲突
+					if (map[i + shape.getY()][j + shape.getX()]) {
 						return true;
 					}
 				}
@@ -120,6 +133,6 @@ public class TetrisGame extends Thread{
 		return false;
 	}
 	public void gameOver(){
-
+		gameState=GSTOP;
 	}
 }
