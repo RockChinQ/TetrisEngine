@@ -1,5 +1,6 @@
 package com.rockchin.tetris.core.shapes;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -8,6 +9,7 @@ import java.util.ArrayList;
  */
 public abstract class Shape {
 	protected int rotate=0;
+	protected Point position=new Point(4,0);
 	protected boolean[][] shapeNow=new boolean[4][4];
 	private ArrayList<boolean[][]> dataLs=new ArrayList<>();
 	protected int addShapeData(boolean[][] d){
@@ -21,8 +23,18 @@ public abstract class Shape {
 		return dataLs;
 	}
 
+	/**
+	 * 直接旋转，是否成功需要调用者验证并回溯（如果需要）
+	 */
 	public void rotate(){
 		shapeNow=dataLs.get((++rotate)%dataLs.size()).clone();
+	}
+
+	/**
+	 * 回溯
+	 */
+	public void back(){
+		shapeNow=dataLs.get((--rotate)%dataLs.size());
 	}
 	public boolean[][] getShapeNow(){
 		return shapeNow;
