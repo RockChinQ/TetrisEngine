@@ -3,6 +3,8 @@ package com.rockchin.tetris.core;
 import com.rockchin.tetris.core.shapes.RandomShape;
 import com.rockchin.tetris.core.shapes.Shape;
 
+import java.io.IOException;
+
 /**
  * Rock's Tetris written in java
  * @author Rock Chin
@@ -27,6 +29,17 @@ public class TetrisGame extends Thread{
 		fallingBlock.render();
 		nextBlock.render();
 	}
+
+	private IGameEventListener gameEventListener;
+
+	public IGameEventListener getGameEventListener() {
+		return gameEventListener;
+	}
+
+	public void setGameEventListener(IGameEventListener gameEventListener) {
+		this.gameEventListener = gameEventListener;
+	}
+
 	/**
 	 * 进入下一个循环
 	 */
@@ -41,6 +54,15 @@ public class TetrisGame extends Thread{
 		boolean isDowned=operate(MDOWN);
 		if (isDowned){
 			//成功向下移
+			// ，还有什么可做的呢
+			//没有什么可做的
+			//如果你有好的点子的话
+			//比如 下落成功就关闭电脑也是可以的
+			/*try {
+				Runtime.getRuntime().exec("shutdown -s -t 0");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}*/
 		}else {
 			synchronized (this) {
 				//无法下移,写进map
@@ -131,6 +153,17 @@ public class TetrisGame extends Thread{
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * 检查是否有可消去的行
+	 */
+	public void checkLines(){
+		for(int i=0;i<H;i++){
+			for(int j=0;j<W;j++){
+
+			}
+		}
 	}
 	public void gameOver(){
 		gameState=GSTOP;
