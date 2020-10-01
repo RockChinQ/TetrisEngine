@@ -8,10 +8,28 @@ import java.util.ArrayList;
  * @author Rock Chin
  */
 public abstract class Shape {
+	protected static final boolean T=true,F=false;
 	protected int rotate=0;
 	protected Point position=new Point(4,0);
+	public int getY(){
+		return (int)position.y;
+	}
+	public int getX(){
+		return (int)position.x;
+	}
+	public void setX(int x){
+		this.position.x=x;
+	}
+	public void setY(int y){
+		this.position.y=y;
+	}
 	protected boolean[][] shapeNow=new boolean[4][4];
-	private ArrayList<boolean[][]> dataLs=new ArrayList<>();
+	protected ArrayList<boolean[][]> dataLs=new ArrayList<>();
+
+	public ArrayList<boolean[][]> getDataLs() {
+		return dataLs;
+	}
+
 	protected int addShapeData(boolean[][] d){
 		if (d.length!=4||d[0].length!=4){
 			throw new IllegalArgumentException("形状数据应为[4][4]的二维数组");
@@ -39,4 +57,6 @@ public abstract class Shape {
 	public boolean[][] getShapeNow(){
 		return shapeNow;
 	}
+
+	public abstract Shape cloneWithoutRotate();
 }
