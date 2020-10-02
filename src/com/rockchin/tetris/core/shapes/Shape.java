@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public abstract class Shape {
 	protected static final boolean T=true,F=false;
 	protected int rotate=0;
-	protected Point position=new Point(4,0);
+	protected Point position=new Point(4,-4);
 	public int getY(){
 		return (int)position.y;
 	}

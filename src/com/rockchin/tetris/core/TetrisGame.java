@@ -25,6 +25,7 @@ public class TetrisGame extends Thread{
 		return map;
 	}
 	public TetrisGame(){
+		fallingBlock.setY(-5);
 		fallingBlock.render();
 		nextBlock.render();
 	}
@@ -72,7 +73,7 @@ public class TetrisGame extends Thread{
 					for (int j = 0; j < 4; j++) {
 						if (fallingBlock.getShapeNow()[i][j]) {
 							if (i+fallingBlock.getY()<0){
-								gameOver();
+//								gameOver();
 								continue ;
 							}
 							map[i + fallingBlock.getY()][j + fallingBlock.getX()]=true;
@@ -145,7 +146,7 @@ public class TetrisGame extends Thread{
 						return true;
 					}
 					if(i+shape.getY()<0){
-						return false;
+						continue;
 					}
 					//先检查是否与map冲突
 					if (map[i + shape.getY()][j + shape.getX()]) {
@@ -173,7 +174,8 @@ public class TetrisGame extends Thread{
 			//可以消除一行
 			lineCleared.add(i);
 		}
-		this.getGameEventListener().clearLine(listToArr(lineCleared));
+		if(getGameEventListener()!=null)
+			this.getGameEventListener().clearLine(listToArr(lineCleared));
 		//删除数据
 		for (Integer lineNum:lineCleared){
 			for(int i=lineNum;i>=0;i--){
