@@ -4,6 +4,7 @@ import com.rockchin.tetris.core.shapes.RandomShape;
 import com.rockchin.tetris.core.shapes.Shape;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Rock's Tetris written in java
@@ -12,8 +13,6 @@ import java.io.IOException;
 public class TetrisGame extends Thread{
 	public static final int W=10,H=20;
 
-	private int state=0;
-	public static final int READY=0,PLAYING=1,OVER=2;
 	public int gameState=0;
 	public static final int GSTOP=0,GPLAYING=1;
 	public static final int MDOWN=0,MUP=1,MLEFT=2,MRIGHT=3;
@@ -63,6 +62,9 @@ public class TetrisGame extends Thread{
 			} catch (IOException e) {
 				e.printStackTrace();
 			}*/
+
+			//好吧，下一成功要检查是否消除
+			checkLines();
 		}else {
 			synchronized (this) {
 				//无法下移,写进map
@@ -159,13 +161,43 @@ public class TetrisGame extends Thread{
 	 * 检查是否有可消去的行
 	 */
 	public void checkLines(){
-		for(int i=0;i<H;i++){
+		ArrayList<Integer> lineCleared=new ArrayList<>();
+		nextLine:for(int i=0;i<H;i++){
+			boolean line=true;
 			for(int j=0;j<W;j++){
-
+				if(!map[i][j]){
+					line=false;
+					continue nextLine;
+				}
+			}
+			//可以消除一行
+			lineCleared.add(i);
+		}
+		this.getGameEventListener().clearLine(listToArr(lineCleared));
+		//删除数据
+		for (Integer lineNum:lineCleared){
+			for(int i=lineNum;i>=0;i--){
+				if(i==0){
+					for(int j=0;j<W;j++){
+						map[i][j]=false;
+					}
+				}else {
+					for(int j=0;j<W;j++){
+						map[i][j]=map[i-1][j];
+					}
+				}
 			}
 		}
 	}
 	public void gameOver(){
 		gameState=GSTOP;
+	}
+
+	public int[] listToArr(ArrayList<Integer> list){
+		int[] result=new int[list.size()];
+		for (int i=0;i<list.size();i++){
+			result[i]=list.get(i);
+		}
+		return result;
 	}
 }
