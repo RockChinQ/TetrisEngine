@@ -18,9 +18,9 @@ public class GUI {
     public JPanel bgp=new JPanel();
 
     static class GamePanel extends JPanel{
-        public static final Color BACKGROUND=new Color(255, 235, 197);
+        public static final Color BACKGROUND=new Color(219, 219, 219);
         public static final Color GRIDLINE=new Color(165, 165, 165,100);
-
+        public static final Font SCORE=new Font("Serif",Font.BOLD,40);
         public TetrisGame tetrisGame=new TetrisGame();
         int gridSize=20;
         public GamePanel(){
@@ -33,7 +33,7 @@ public class GUI {
 
         @Override
         public void paint(Graphics g) {
-            this.setSize(TetrisGame.W*gridSize,TetrisGame.H*gridSize);
+            //this.setSize(TetrisGame.W*gridSize,TetrisGame.H*gridSize);
             //bg
             g.setColor(BACKGROUND);
             g.fillRect(0,0,this.getWidth(),this.getHeight());
@@ -71,6 +71,10 @@ public class GUI {
             for(int i=0;i<TetrisGame.H;i++){
                 g.drawLine(0,i*gridSize,this.getWidth(),i*gridSize);
             }
+            //score
+            g.setColor(Color.GREEN);
+            g.setFont(SCORE);
+            g.drawString(tetrisGame.score+"",20,map.length*gridSize+10);
         }
     }
     class KeyChecker extends TimerTask{
@@ -106,6 +110,7 @@ public class GUI {
         bgp.setLayout(null);
         bgp.setSize(mainwd.getSize());
         bgp.setLocation(0,0);
+        bgp.setBackground(Color.darkGray);
 
         bgp.addKeyListener(new KeyAdapter() {
             @Override
@@ -120,6 +125,7 @@ public class GUI {
                         break;
                     }
                     case 83:
+                    case 32:
                     case 40:{
                         keyChecker.D=true;
                         break;
@@ -150,6 +156,7 @@ public class GUI {
                         break;
                     }
                     case 83:
+                    case 32:
                     case 40:{
                         keyChecker.D=false;
                         break;
@@ -164,9 +171,6 @@ public class GUI {
                         keyChecker.R=false;
                         break;
                     }
-                    default:{
-                        System.out.println(e.getKeyCode());
-                    }
                 }
             }
         });
@@ -174,7 +178,7 @@ public class GUI {
         mainwd.add(bgp);
 
         single.setLocation(10,30);
-        single.setSize(20*TetrisGame.W,20*TetrisGame.H);
+        single.setSize(20*TetrisGame.W,20*TetrisGame.H+30);
         single.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -186,10 +190,11 @@ public class GUI {
                     try {
                         Timer keyTimer=new Timer();
                         keyChecker=new KeyChecker();
-                        keyTimer.schedule(keyChecker,new Date(),110);
+                        keyTimer.schedule(keyChecker,new Date(),80);
                         single.tetrisGame=new TetrisGame();
                         single.tetrisGame.gameState=1;
                         for (;true;) {
+                        	int delay= (int) (Math.random()*1000%500+30);
                             Thread.sleep(150);
                             single.tetrisGame.cycle();
 

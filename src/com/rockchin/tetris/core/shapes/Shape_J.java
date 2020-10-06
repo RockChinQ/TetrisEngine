@@ -32,15 +32,15 @@ public class Shape_J extends Shape{
                 {F,F,F,F}
         });
         this.addShapeData(new boolean[][]{
-                {F,T,T,F},
-                {F,T,F,F},
-                {F,T,F,F},
+                {T,T,F,F},
+                {T,F,F,F},
+                {T,F,F,F},
                 {F,F,F,F}
         });
         this.addShapeData(new boolean[][]{
-                {F,F,F,F},
                 {T,T,T,F},
                 {F,F,T,F},
+                {F,F,F,F},
                 {F,F,F,F}
         });
     }

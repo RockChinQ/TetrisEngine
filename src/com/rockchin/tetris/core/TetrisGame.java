@@ -24,6 +24,8 @@ public class TetrisGame extends Thread{
 	public boolean[][] getMap(){
 		return map;
 	}
+
+	public int score=0;
 	public TetrisGame(){
 		fallingBlock.setY(-5);
 		fallingBlock.render();
@@ -174,6 +176,9 @@ public class TetrisGame extends Thread{
 			//可以消除一行
 			lineCleared.add(i);
 		}
+		//add score
+		if (lineCleared.size()>0)
+			score+=Math.pow(2,lineCleared.size()-1)*100;
 		if(getGameEventListener()!=null)
 			this.getGameEventListener().clearLine(listToArr(lineCleared));
 		//删除数据
@@ -184,9 +189,7 @@ public class TetrisGame extends Thread{
 						map[i][j]=false;
 					}
 				}else {
-					for(int j=0;j<W;j++){
-						map[i][j]=map[i-1][j];
-					}
+					System.arraycopy(map[i - 1], 0, map[i], 0, W);
 				}
 			}
 		}
