@@ -20,7 +20,7 @@ public class GUI {
     static class GamePanel extends JPanel{
         public static final Color BACKGROUND=new Color(219, 219, 219);
         public static final Color GRIDLINE=new Color(165, 165, 165,100);
-        public static final Font SCORE=new Font("Serif",Font.BOLD,40);
+        public static final Font SCORE=new Font("Consolas",Font.BOLD,30);
         public TetrisGame tetrisGame=new TetrisGame();
         int gridSize=20;
         public GamePanel(){
@@ -68,13 +68,23 @@ public class GUI {
             for(int i=0;i<TetrisGame.W;i++){
                 g.drawLine(i*gridSize,0,i*gridSize,this.getHeight());
             }
-            for(int i=0;i<TetrisGame.H;i++){
+            for(int i=0;i<=TetrisGame.H;i++){
                 g.drawLine(0,i*gridSize,this.getWidth(),i*gridSize);
             }
-            //score
+            //next shape
+            Shape nexts=tetrisGame.nextBlock;
             g.setColor(Color.GREEN);
+            for(int i=0;i<4;i++){
+                for(int j=0;j<4;j++){
+                    if(nexts.getShapeNow()[i][j]){
+                        g.fillRect((0+j)*gridSize,(21+i)*gridSize,gridSize,gridSize);
+                    }
+                }
+            }
+            //score
+            g.setColor(Color.BLACK);
             g.setFont(SCORE);
-            g.drawString(tetrisGame.score+"",20,map.length*gridSize+10);
+            g.drawString(tetrisGame.score+"",40,map.length*gridSize+23);
         }
     }
     class KeyChecker extends TimerTask{
@@ -103,7 +113,7 @@ public class GUI {
     GamePanel single=new GamePanel();
     public GUI(){
         this.mainwd.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.mainwd.setSize(400,600);
+        this.mainwd.setSize(400,650);
         this.mainwd.setLocation(200,200);
         this.mainwd.setLayout(null);
 
@@ -178,7 +188,7 @@ public class GUI {
         mainwd.add(bgp);
 
         single.setLocation(10,30);
-        single.setSize(20*TetrisGame.W,20*TetrisGame.H+30);
+        single.setSize(20*TetrisGame.W,20*TetrisGame.H+90);
         single.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -188,14 +198,14 @@ public class GUI {
                 }
                 new Thread(()->{
                     try {
+                        int delay=Integer.parseInt(javax.swing.JOptionPane.showInputDialog("delay"));
                         Timer keyTimer=new Timer();
                         keyChecker=new KeyChecker();
-                        keyTimer.schedule(keyChecker,new Date(),80);
+                        keyTimer.schedule(keyChecker,new Date(),60);
                         single.tetrisGame=new TetrisGame();
                         single.tetrisGame.gameState=1;
                         for (;true;) {
-                        	int delay= (int) (Math.random()*1000%500+30);
-                            Thread.sleep(150);
+                            Thread.sleep(delay);
                             single.tetrisGame.cycle();
 
                             single.repaint();
